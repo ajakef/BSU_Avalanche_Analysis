@@ -1,0 +1,3 @@
+#!/bin/bash
+conda activate
+python /home/ccube-admin/code/cron_jobs/MakeStatusPlots.py
