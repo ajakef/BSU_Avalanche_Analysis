@@ -120,14 +120,14 @@ def AnalyzeIncoming(analysisData, current_analysis_t0, new_analysis_t0):
          'xc': [xc12, xc23, xc31]}
     return D
 
-def WriteCorrelogram(correlogram, stats, t):
+def WriteCorrelogram(correlogram, stats, t, Station_ID):
     t = obspy.UTCDateTime(round(float(t))) ## round down OR up to the nearest second. note that this may cause problems if time zones are involved.
     for i in range(3):
-        filename = CGRAM_DIR +'/' + t.strftime(T_FMT) + '_' + str(i) + '.txt' #str(i+1) + str(1 + ((i+1) % 3))
+        filename = CGRAM_DIR +'/' + t.strftime(T_FMT) + '_' + Station_ID + '_' + str(i) + '.txt' #str(i+1) + str(1 + ((i+1) % 3))
         with open(filename,'wb') as file:
             for line in np.matrix(correlogram[i]):
                 np.savetxt(file, line, fmt='%.4f')
-    filename = CGRAM_DIR + '/' + t.strftime(T_FMT) + '_stats.txt' #str(i+1) + str(1 + ((i+1) % 3))
+    filename = CGRAM_DIR + '/' + t.strftime(T_FMT) + '_' + Station_ID + '_stats.txt' #str(i+1) + str(1 + ((i+1) % 3))
     with open(filename,'wb') as file:
         for line in np.matrix(stats):
             np.savetxt(file, line, fmt='%.4f')

@@ -20,6 +20,15 @@ def FindParameter(text, parameter):
     param = re.findall(r'(?:\d{1,3}\.)+(?:\d{1,3})', section)[0]
     return param
 
+def FindDB(text, parameter):
+    pattern=r'[+-]?\d+\.?\d*'
+    foundParameter = re.findall(parameter, text)[0] # need this because SINR might be formatted unpredictably
+    start = text.find(foundParameter) + len(foundParameter)
+    section = text[start:(30 + start)]
+    dB = re.findall(pattern, section)[0]
+    print(dB)
+    return dB
+
 ## begin the code to run
 CCUBE_list = ['CC125', 'CC129', 'CC147'] # list of CCUBE IDs to search
 
@@ -27,10 +36,13 @@ time.sleep(120) # it seems to take less than a minute for status files to post. 
 
 voltageFile = open('/home/ccube-admin/logfiles/CCUBE_voltage.txt', 'a')
 allDataFile = open('/home/ccube-admin/logfiles/CCUBE_data.txt', 'a')
+cellSignalFile = open('/home/ccube-admin/logfiles/CCUBE_LTE.txt', 'a')
 
 t_now = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
 voltageFile.write(t_now + ' ')
 allDataFile.write(t_now + ' ')
+cellSignalFile.write(t_now + ' ')
+
 for CCUBE_ID in CCUBE_list:
     filename = '/home/ccube-admin/' + CCUBE_ID + '_status.txt'
 
@@ -47,6 +59,9 @@ for CCUBE_ID in CCUBE_list:
         temperature = 'NaN'
         systemVoltage = 'NaN'
         backupVoltage = 'NaN'
+        SINR = 'NaN'
+        RSRP = 'NaN'
+        RSRQ = 'NaN'
     else:
         with open(filename, 'r') as file:
             text = file.read()
@@ -55,6 +70,10 @@ for CCUBE_ID in CCUBE_list:
         temperature = FindParameter(text, 'Temperature')
         systemVoltage = FindParameter(text, 'System')
         backupVoltage = FindParameter(text, 'Battery')
+        ############################
+        SINR = FindDB(text, 'SINR.{0,6}\:')
+        RSRP = FindDB(text, 'RSRP')
+        RSRQ = FindDB(text, 'RSRQ')
 
     ## optionally print data to the screen
     if(False):    
@@ -66,6 +85,11 @@ for CCUBE_ID in CCUBE_list:
         
     ## write data to the output files    
     voltageFile.write(systemVoltage + ' ')
+
+    cellSignalFile.write(SINR + ' ' +
+                         RSRP + ' ' +
+                         RSRQ + ' ')
+
     allDataFile.write(systemVoltage + ' ' +
                   backupVoltage + ' ' +
                   temperature + ' ' +
@@ -73,5 +97,5 @@ for CCUBE_ID in CCUBE_list:
                   IP_wwan0 + ' ')
 voltageFile.write('\n')
 allDataFile.write('\n')
-    
+cellSignalFile.write('\n')    
 
