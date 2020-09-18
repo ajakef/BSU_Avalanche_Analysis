@@ -1,3 +1,6 @@
+data_dir = '/home/ccube-admin/CCUBE_test'
+code_dir = '/home/ccube-admin/code'
+
 import numpy as np
 import subprocess
 from obspy.clients.seedlink.easyseedlink import create_client
@@ -5,14 +8,14 @@ from obspy import Stream
 from obspy import UTCDateTime
 from obspy.signal.cross_correlation import xcorr_max, xcorr_pick_correction, xcorr
 import sys
-sys.path.append('/home/ccube-admin/code/lib')
+sys.path.append(code_dir + '/lib')
 import CCUBE_preprocess_lib
 #from networks import LCC_2020 as network
 from networks import aftershocks_2020 as network
 
-#CCUBE_ID = CCUBE_preprocess_lib.ParseID(sys.argv[1])
-#DATACUBE_ID = sys.argv[2]
-data_dir = '/home/ccube-admin/CCUBE_test'
+if(len(sys.argv) < 2):
+    print('Need to provide station name')
+    exit()
 Station_ID = sys.argv[1]
 station_index = np.where(network.Station == Station_ID)[0]
 if(len(station_index) > 1):
