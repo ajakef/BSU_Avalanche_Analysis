@@ -11,11 +11,12 @@ import sys
 sys.path.append(code_dir + '/lib')
 import CCUBE_preprocess_lib
 #from networks import LCC_2020 as network
-from networks import aftershocks_2020 as network
+from networks import network
 
 if(len(sys.argv) < 2):
     print('Need to provide station name')
     exit()
+print(network)
 Station_ID = sys.argv[1]
 station_index = np.where(network.Station == Station_ID)[0]
 if(len(station_index) > 1):
