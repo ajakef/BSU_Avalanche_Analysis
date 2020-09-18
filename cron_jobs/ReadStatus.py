@@ -26,7 +26,8 @@ def FindDB(text, parameter):
     start = text.find(foundParameter) + len(foundParameter)
     section = text[start:(30 + start)]
     dB = re.findall(pattern, section)[0]
-    print(dB)
+    if False:
+        print(dB)
     return dB
 
 ## begin the code to run
