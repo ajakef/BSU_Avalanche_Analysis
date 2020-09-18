@@ -28,11 +28,11 @@ def dig2(n):
 def fmt(n):
     return '{:0.3f}'.format(n)
 
-def writeSplitMSEED(stream):
+def writeSplitMSEED(stream, data_dir):
     stream.merge()
     for mseedTrace in stream.split():
         traceStart = mseedTrace.stats.starttime
-        filename = 'CCUBE_test/' + dig2(traceStart.year) + \
+        filename = data_dir + '/' + dig2(traceStart.year) + \
             '.' + dig2(traceStart.julday) + \
             '.' + dig2(traceStart.hour) + '.' + \
             dig2(traceStart.minute) + '.' + \
